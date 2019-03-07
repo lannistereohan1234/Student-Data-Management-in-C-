@@ -1,0 +1,199 @@
+#include <iostream>
+#include<bits/stdc++.h>
+#include<fstream>
+#include<stdio.h>
+#include<string.h>
+
+using namespace std;
+
+int main(){
+char data[15];
+int n=0,count_line=0,option=0;
+string empty="00";
+string proctor = "";
+//name of the file where DB is stored
+ifstream f("db.txt");  //check for this line
+string line;
+while(getline(f,line))
+    count_line++;
+
+while(option!=6){
+    cout<<"Available options \n 1.Add new student\n 2.Student login\n 3.Faulty login\n 4.Proctor login\n 5.Admin view\n 6.Exit\n Enter option";
+    cin>>option;
+
+
+if(option==1){
+    cout<<"Enter no. of students\n";
+    cin>>n;
+    count_line+=n;
+    for(int i=0;i<n;i++){
+
+    ofstream outfile;//("db.txt");
+    outfile.open("db.txt",ios::app);    //data is only written after opening file
+
+    cout<<"Enter registration number\n";
+    cin>>data;
+    outfile<<data<<"\t";
+
+    cout<<"Enter name\n";
+    cin>>data;
+    int len=strlen(data);
+    while(len<15){
+    data[len]=' ';
+    len+=1;
+    }
+    outfile<<data<<"\t";
+    outfile<<empty<<"\t";
+    outfile<<empty<<"\t";
+
+    cout<<"Enter proctor ID"<<endl;
+    cin>>proctor;
+    outfile<< proctor<<endl;
+    }
+
+}else if(option==2){
+    char regno[15];
+    cout<<"Enter registration no.\n";
+    cin>>regno;
+    ifstream infile;
+    infile.open("db.txt",ios::in);
+    int check=0;
+    while(infile>>data){
+        if(strcmp(data,regno)==0){      //if value is found
+            cout<<"Registration no.\t"<<data<<endl;
+            infile>>data;
+            cout<<"name\t"<<data<<endl;
+            infile>>data;
+            cout<<"CSE001 mark\t"<<data<<endl;
+            infile>>data;
+            cout<<"CSE002 mark\t"<<data<<endl;
+            infile>>data;
+            cout<<"proctor ID\t"<<data<<endl;
+            infile.close();
+            check=1;
+        }
+
+    }
+    if(check==0)
+        cout<<"No such regno. is there"<<endl;
+
+    //the case of adding and viewing the data
+    }else if(option==3){
+           char subcode[7];
+        cout << "Enter your subject code: ";
+        cin >> subcode;
+        string code1 = "CSE1001", code2 = "CSE1002",mark = "";
+        ifstream infile;
+        int check = 0;
+
+        cout << "\nAvailable operations: \n1. Add data about marks\n"
+                << "2. View data\nEnter option: ";
+        cin >> option;
+
+        if (option == 1){
+            cout << " You would need to add mark"<< endl;
+            for(int i = 0;i < count_line;i++){
+                fstream file("db.txt");
+
+            if(strcmp(subcode,code1.c_str()) == 0){
+                        file.seekp(26+37*i,std::ios_base::beg);
+                    cout << "Enter the mark of student#" << (i+1) << " : ";
+                cin >> mark;
+                file.write(mark.c_str(),2);}
+
+            if(strcmp(subcode,code2.c_str()) == 0){
+                file.seekp(29+37*i,std::ios_base::beg);
+                cout << "Enter the mark of student#" << (i+1) << " : ";
+                cin >> mark;
+                file.write(mark.c_str(),2);}
+            }
+
+        }
+
+        else if(option == 2){
+        infile.open("db.txt",ios::in);
+        if (strcmp(subcode,code1.c_str()) == 0){
+            cout << "Registration number - Marks\n" << endl;
+            while(infile >> data){
+            cout << data;
+            infile >> data;
+                infile >> data;
+            cout << " - " << data << endl;
+            infile >> data;
+            infile >> data;
+            check = 1;
+            }
+        }
+
+        infile.close();
+        infile.open("db.txt",ios::in);
+
+        if(strcmp(subcode,code2.c_str()) == 0){
+            cout << "Registration number - Marks\n" << endl;
+                while(infile >> data){
+            cout << data;
+            infile >> data;
+            infile >> data;
+            infile >> data;
+            cout << " - " << data << endl;
+            infile >> data;
+            check = 1;
+            }
+        }}
+
+        infile.close();
+
+        if (check == 0){
+            cout << "No such subject code found!" << endl;
+        }
+
+
+    }else if(option==4){        //the case of displaying all data for same proctor
+    char prcid[7];
+    cout<<"Enter protor ID\n";
+    cin>>prcid;
+    int check=1;
+    char t1[100],t2[100],t3[100],t4[100],id[100];
+    ifstream infile;
+    infile.open("db.txt",ios::in);
+    while(infile>>t1){
+            infile>>t2;
+            infile>>t3;
+            infile>>t4;
+            infile>>id;
+      if(strcmp(id,prcid)==0){
+        cout<<"registration no."<<t1<<endl;
+        cout<<"name"<<t2<<endl;
+        cout<<"CSE001 mark"<<t3<<endl;
+        cout<<"CSE002 mark"<<t4<<endl;
+        check=1;
+      }
+    }
+    if(check==0)
+        cout<<"No such registration no. found"<<endl;
+    }else if(option==5){
+    char pwd[15];
+    cout<<"Enter password";
+    cin>>pwd;
+    string admin_pass="admin";
+    if(strcmp(pwd,admin_pass.c_str())==0){
+        cout<<"Reg no. \t name\t CSE001 mark\t CSE002 mark\t proctor ID"<<endl;
+        ifstream infile;
+        infile.open("db.txt",ios::in);
+        char data[20];
+        while(infile>>data){
+            cout<<data<<"\t";
+            infile>>data;
+            cout<<data<<"\t";
+            infile>>data;
+            cout<<data<<"\t";
+            infile>>data;
+            cout<<data<<"\t";
+            infile>>data;
+            cout<<data<<endl;
+
+        }
+
+    }
+    }}
+}
